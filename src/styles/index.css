@@ -37,7 +37,7 @@ body {
       rgba(0, 0, 0, 0.4) 2px,
       rgba(0, 0, 0, 0.4) 4px
     ),
-    url('forest.jpg'); /* Replace with your image path */
+    url('/forest.jpg'); /* Replace with your image path */
     
   /* Ensure the image covers the screen but the scanlines repeat normally */
   background-size: auto, cover; 
