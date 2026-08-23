@@ -50,10 +50,6 @@ button:disabled {
   pointer-events: none;
 }
 
-a {
-  color: var(--nes-blue);
-  text-decoration: none;
-}
 
 a:hover {
   color: var(--nes-gold);
@@ -90,17 +86,6 @@ a:hover {
   text-align: center;
 }
 
-.header__title-group {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
-
-.header__logo {
-  width: 32px;
-  image-rendering: pixelated;
-}
-
 .header__title {
   font-size: clamp(1.2rem, 3vw, 2rem);
   color: var(--nes-red);
@@ -119,30 +104,6 @@ a:hover {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
-}
-
-.score-pill {
-  border: var(--border-thick);
-  padding: 0.75rem 1rem;
-  background: var(--nes-panel);
-  box-shadow: var(--shadow-block);
-  min-width: 110px;
-}
-
-.score-pill--best {
-  border-color: var(--nes-gold);
-}
-
-.score-pill__label {
-  display: block;
-  font-size: 8px;
-  color: var(--nes-blue);
-  margin-bottom: 8px;
-}
-
-.score-pill__value {
-  font-size: 16px;
-  color: var(--nes-text);
 }
 
 .score-pill--best .score-pill__value {
@@ -266,12 +227,6 @@ a:hover {
   animation: blink 1s step-end infinite;
 }
 
-.error-state__text {
-  font-size: 10px;
-  color: var(--nes-red);
-  line-height: 1.6;
-}
-
 /* here the Buttons Starts or Reset */
 .btn {
   font-size: 10px;
@@ -281,30 +236,7 @@ a:hover {
   transition: transform 0.1s linear;
 }
 
-.btn--primary {
-  background: var(--nes-red);
-  color: var(--nes-text);
-}
 
-.btn--primary:hover {
-  background: var(--nes-gold);
-  color: #000;
-  border-color: #000;
-}
-
-.btn--ghost {
-  background: var(--nes-panel);
-  color: var(--nes-text);
-}
-
-.btn--ghost:hover {
-  background: var(--nes-blue);
-}
-
-.btn:active {
-  transform: translate(4px, 4px);
-  box-shadow: none;
-}
 
 /* the Game Over and Victory Modal */
 .modal-overlay {
@@ -343,22 +275,6 @@ a:hover {
   color: var(--nes-green); /* STAGE CLEAR vibe */
 }
 
-.modal__title {
-  font-size: 20px;
-  margin: 0 0 1.5rem;
-  color: var(--nes-gold);
-}
-
-.modal__body {
-  color: var(--nes-gray);
-  margin: 0 0 2.5rem;
-  font-size: 10px;
-  line-height: 1.8;
-}
-
-.modal__body strong {
-  color: var(--nes-text);
-}
 
 .modal__actions {
   display: flex;
