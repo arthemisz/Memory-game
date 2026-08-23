@@ -9,7 +9,7 @@
   --nes-green: #43B047;
   --nes-gold: #FBD000;
   --nes-text: #ffffff;
-  --nes-gray: #00e8e8;
+  --nes-gray: #bfc1c2;
   --font-retro: 'Press Start 2P', monospace;
   --border-thick: 4px solid var(--nes-text);
   --shadow-block: 4px 4px 0px #000000;
@@ -114,10 +114,6 @@ a:hover {
   display: flex;
   gap: 1rem;
   margin-top: 1rem;
-}
-
-.score-pill--best .score-pill__value {
-  color: var(--nes-gold);
 }
 
 /* How to select the Difficulty? */

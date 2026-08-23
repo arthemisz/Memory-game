@@ -43,7 +43,7 @@ export default function App() {
   return (
     <div className="app">
       <div className="app__container">
-        <Header score={score} bestScore={bestScore} totalCards={cards.length} />
+        <Header score= {score} bestScore={bestScore} totalCards={cards.length} />
 
         <DifficultySelector
           difficulties={difficulties}
