@@ -18,42 +18,51 @@ export const GAME_STATUS = {
 
 const BEST_SCORE_KEY = 'memoryGame.bestScore'
 
-function readBestScore() {
-  try {
-    const stored = window.localStorage.getItem(BEST_SCORE_KEY)
-    const parsed = stored ? parseInt(stored, 10) : 0
-    return Number.isFinite(parsed) ? parsed : 0
-  } catch {
-    return 0
-  }
+// --- Local Storage Helpers ---
+const readBestScore = () => {
+  const stored = window.localStorage.getItem(BEST_SCORE_KEY)
+  const parsed = parseInt(stored, 10)
+  return Number.isFinite(parsed) ? parsed : 0
 }
 
-function writeBestScore(value) {
-  try {
-    window.localStorage.setItem(BEST_SCORE_KEY, String(value))
-  } catch {
-    // ¯\_(ツ)_/¯
-  }
+const writeBestScore = (value) => {
+  try { window.localStorage.setItem(BEST_SCORE_KEY, String(value)) } 
+  catch { /* Ignore storage errors */ }
 }
 
+// Main Hook 
 export function useMemoryGame(initialDifficulty = 'medium') {
-  // State
+  
+  // 1. Game Settings & UI State
   const [difficulty, setDifficulty] = useState(initialDifficulty)
-  const [cards, setCards] = useState([])
-  const [clickedIds, setClickedIds] = useState(() => new Set())
-  const [score, setScore] = useState(0)
-  const [bestScore, setBestScore] = useState(readBestScore)
   const [status, setStatus] = useState(GAME_STATUS.LOADING)
   const [error, setError] = useState(null)
+  
+  // 2. Deck & Player State
+  const [cards, setCards] = useState([])
+  const [clickedIds, setClickedIds] = useState(() => new Set())
   const [lastClickedId, setLastClickedId] = useState(null)
+  
+  // 3. Scores
+  const [score, setScore] = useState(0)
+  const [bestScore, setBestScore] = useState(readBestScore)
 
-  // HACK: Prevents spam clicking during shuffle
+  // 4. Refs for Click Prevention
   const isProcessingRef = useRef(false)
-  // TODO: This should probably be cleaned up on unmount
   const timeoutRef = useRef(null)
 
   const cardCount = DIFFICULTIES[difficulty].cardCount
 
+  // Helper to update and save the best score
+  const updateBestScore = useCallback((currentScore) => {
+    setBestScore((prevBest) => {
+      const highest = Math.max(prevBest, currentScore)
+      if (highest !== prevBest) writeBestScore(highest)
+      return highest
+    })
+  }, [])
+
+  // Fetches a fresh set of Pokémon
   const loadNewDeck = useCallback(async (count) => {
     setStatus(GAME_STATUS.LOADING)
     setError(null)
@@ -66,41 +75,40 @@ export function useMemoryGame(initialDifficulty = 'medium') {
       setLastClickedId(null)
       setStatus(GAME_STATUS.PLAYING)
     } catch (err) {
-      console.error('Failed to load deck:', err) // Keep for debugging
-      setError(err instanceof Error ? err.message : 'Something went wrong loading Pokémon.')
+      setError(err instanceof Error ? err.message : 'Failed to load Pokémon.')
       setStatus(GAME_STATUS.ERROR)
     }
   }, [])
 
+  // Load a new deck whenever the difficulty changes
   useEffect(() => {
     loadNewDeck(cardCount)
-  }, [difficulty])
+  }, [difficulty, cardCount, loadNewDeck])
 
-  const handleCardClick = useCallback(
-    (pokemonId) => {
-      // FIXME: This doesn't work properly on mobile sometimes
-      if (isProcessingRef.current) return
+  // Cleanup timeouts when the component unmounts
+  useEffect(() => {
+    return () => clearTimeout(timeoutRef.current)
+  }, [])
+
+  // Main gameplay logic
+  const handleCardClick = useCallback((pokemonId) => {
+      // Ignore clicks if animating or game is over
+      if (isProcessingRef.current || status !== GAME_STATUS.PLAYING) return
       
-      if (status !== GAME_STATUS.PLAYING) return
-
-      if (clickedIds.has(pokemonId)) {
-        setLastClickedId(pokemonId)
-        setStatus(GAME_STATUS.LOST)
-        
-        setBestScore((prevBest) => {
-          const nextBest = Math.max(prevBest, score)
-          if (nextBest !== prevBest) writeBestScore(nextBest)
-          return nextBest
-        })
-        return
-      }
-
-      // Lock to prevent double clicks
+      // Lock interactions
       isProcessingRef.current = true
       clearTimeout(timeoutRef.current)
       
-      const nextClicked = new Set(clickedIds)
-      nextClicked.add(pokemonId)
+      // CONDITION 1: Player clicked a card they already clicked (Loss)
+      if (clickedIds.has(pokemonId)) {
+        setStatus(GAME_STATUS.LOST)
+        setLastClickedId(pokemonId)
+        updateBestScore(score)
+        return
+      }
+
+      // CONDITION 2: Player clicked a new card (Success)
+      const nextClicked = new Set(clickedIds).add(pokemonId)
       const nextScore = score + 1
 
       setClickedIds(nextClicked)
@@ -108,55 +116,35 @@ export function useMemoryGame(initialDifficulty = 'medium') {
       setLastClickedId(pokemonId)
       setCards((prevCards) => shuffleArray(prevCards))
 
-      // Unlock after shuffle animation
+      // CONDITION 3: Player clicked all cards (Win)
+      if (nextClicked.size === cards.length) {
+        setStatus(GAME_STATUS.WON)
+        updateBestScore(nextScore)
+      }
+
+      // Unlock interactions after the shuffle animation finishes
       timeoutRef.current = setTimeout(() => {
         isProcessingRef.current = false
       }, 250)
 
-      if (nextClicked.size === cards.length) {
-        setStatus(GAME_STATUS.WON)
-        
-        setBestScore((prevBest) => {
-          const nextBest = Math.max(prevBest, nextScore)
-          if (nextBest !== prevBest) writeBestScore(nextBest)
-          return nextBest
-        })
-      }
     },
-    [status, clickedIds, score, cards.length]
+    [status, clickedIds, score, cards.length, updateBestScore]
   )
 
-  // cleanup
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
-
+  // Resets the current deck for another try
   const restartRound = useCallback(() => {
     setCards((prevCards) => shuffleArray(prevCards))
     setClickedIds(new Set())
     setScore(0)
     setLastClickedId(null)
     setStatus(GAME_STATUS.PLAYING)
-    // Reset the lock just in case
     isProcessingRef.current = false
-  }, [])
-
-  const newDeck = useCallback(() => {
-    loadNewDeck(cardCount)
-  }, [loadNewDeck, cardCount])
-
-  const changeDifficulty = useCallback((nextDifficulty) => {
-    setDifficulty(nextDifficulty)
   }, [])
 
   return {
     difficulty,
     difficulties: DIFFICULTIES,
-    changeDifficulty,
+    changeDifficulty: setDifficulty, // Directly pass the setter here
     cards,
     clickedIds,
     score,
@@ -166,6 +154,6 @@ export function useMemoryGame(initialDifficulty = 'medium') {
     lastClickedId,
     handleCardClick,
     restartRound,
-    newDeck,
+    newDeck: () => loadNewDeck(cardCount),
   }
 }
