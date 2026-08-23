@@ -30,7 +30,7 @@ const writeBestScore = (value) => {
   catch { /* Ignore storage errors */ }
 }
 
-// Main Hook 
+// --- Main Hook ---
 export function useMemoryGame(initialDifficulty = 'medium') {
   
   // 1. Game Settings & UI State

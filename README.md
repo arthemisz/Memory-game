@@ -1,12 +1,12 @@
-# 🧠 Memory Match — Pokémon Memory Card Game
+#  Memory Match — Pokémon Memory Card Game
 
-A memory card game built with React + Vite. Click a card to score a point — but click the **same card twice** and it's game over. Cards reshuffle after every click using the Fisher-Yates algorithm, so you're never clicking in a predictable order.
+A memory card game built with React + Vite. Design heavy production.The logic of the game is Click a card to score a point — but click the **same card twice** and it's game over. Cards reshuffle after every click using the Fisher-Yates algorithm, so you're never clicking in a predictable order.
 
 Built for **Nexus Front-End Boot Camp — Project 4** (State, Side Effects & Game Logic), inspired by [The Odin Project's Memory Card lesson](https://www.theodinproject.com/lessons/node-path-react-new-memory-card).
 
 ---
 
-## 🎮 How to Play
+## How to Play
 
 1. A grid of Pokémon cards loads from [PokéAPI](https://pokeapi.co/).
 2. Click any card to score **+1 point**.
@@ -14,7 +14,6 @@ Built for **Nexus Front-End Boot Camp — Project 4** (State, Side Effects & Gam
 4. Click a card you've **already clicked this round** → **Game Over**.
 5. Click **every card exactly once** → **You Win**.
 6. Your **best score** is saved across sessions (localStorage).
-
 
 ## 📁 Project Structure
 
@@ -64,7 +63,7 @@ App
 
 ---
 
-## 🃏 The Shuffle Trap (why `key={pokemon.id}`)
+## The Shuffle Trap (why `key={pokemon.id}`)
 
 In `GameBoard.jsx`, each `<Card>` is keyed by `pokemon.id`, **never** by array index:
 
@@ -78,7 +77,7 @@ After a shuffle, the *array order* changes but the *set of Pokémon* doesn't. If
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) 18+ and npm
@@ -109,40 +108,7 @@ No API key or `.env` file is required — PokéAPI is free and public.
 
 ---
 
-## ☁️ Deployment
-
-### Option A: Vercel
-
-1. Push this project to a GitHub repo (see below).
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repo.
-3. Vercel auto-detects Vite. Confirm:
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-4. Click **Deploy**.
-
-Or via CLI:
-```bash
-npm install -g vercel
-vercel --prod
-```
-
-### Option B: Netlify
-
-1. Push this project to a GitHub repo (see below).
-2. Go to [app.netlify.com/start](https://app.netlify.com/start) and pick the repo.
-3. Set:
-   - **Build Command:** `npm run build`
-   - **Publish Directory:** `dist`
-4. Click **Deploy site**.
-
-Or via CLI:
-```bash
-npm install -g netlify-cli
-netlify deploy --prod --dir=dist
-```
-
----
-
+#
 ## 📦 Push to GitHub
 
 This project already includes a local git repo with staged, meaningful commits (scaffold → utilities → game logic → components → styling → docs). To publish it:
@@ -163,7 +129,7 @@ git log --oneline
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **React 18** — UI and state
 - **Vite** — dev server & build tool
@@ -174,6 +140,6 @@ git log --oneline
 
 ---
 
-## 🙏 Credits
+## Credits
 
 Pokémon data and artwork via [PokéAPI](https://pokeapi.co/). Not affiliated with Nintendo, Game Freak, or The Pokémon Company. Project brief adapted from [The Odin Project](https://www.theodinproject.com/lessons/node-path-react-new-memory-card).
