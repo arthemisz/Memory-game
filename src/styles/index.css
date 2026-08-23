@@ -87,6 +87,10 @@ a:hover {
   font-size: 8px;
   margin-top: 2rem;
 }
+.header__logo { 
+ width: 200px;
+ image-rendering: pixelated;
+}
 
 /* Header & HUD (Heads Up Display) */
 .header {
