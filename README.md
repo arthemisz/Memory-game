@@ -1,7 +1,6 @@
-Deployed link: https://pokemon-memory-g.vercel.app/
-
-
 #  Memory Match — Pokémon Memory Card Game
+
+Deployed link: https://pokemon-memory-g.vercel.app/
 
 A memory card game built with React + Vite. Design heavy production.The logic of the game is Click a card to score a point — but click the **same card twice** and it's game over. Cards reshuffle after every click using the Fisher-Yates algorithm, so you're never clicking in a predictable order.
 
