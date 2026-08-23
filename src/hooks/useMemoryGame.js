@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { shuffleArray } from '../utils/shuffle'
 import { fetchRandomPokemon } from '../utils/pokeApi'
 
@@ -24,7 +24,6 @@ function readBestScore() {
     const parsed = stored ? parseInt(stored, 10) : 0
     return Number.isFinite(parsed) ? parsed : 0
   } catch {
-    // localStorage can throw in private-browsing / disabled-storage contexts
     return 0
   }
 }
@@ -33,32 +32,32 @@ function writeBestScore(value) {
   try {
     window.localStorage.setItem(BEST_SCORE_KEY, String(value))
   } catch {
-    // Best-effort only — losing best-score persistence shouldn't break the game
+    // ¯\_(ツ)_/¯
   }
 }
 
-/**
- * Encapsulates all state and logic for the Memory Card game:
- *  - fetching a fresh Pokémon deck from PokéAPI whenever difficulty changes
- *  - the click handler that scores, shuffles, detects repeats, and detects wins
- *  - best-score persistence across sessions via localStorage
- */
 export function useMemoryGame(initialDifficulty = 'medium') {
+  // State
   const [difficulty, setDifficulty] = useState(initialDifficulty)
-  const [cards, setCards] = useState([]) // shuffled deck currently on screen
+  const [cards, setCards] = useState([])
   const [clickedIds, setClickedIds] = useState(() => new Set())
   const [score, setScore] = useState(0)
   const [bestScore, setBestScore] = useState(readBestScore)
   const [status, setStatus] = useState(GAME_STATUS.LOADING)
   const [error, setError] = useState(null)
-  const [lastClickedId, setLastClickedId] = useState(null) // for the "you repeated this one" message
+  const [lastClickedId, setLastClickedId] = useState(null)
+
+  // HACK: Prevents spam clicking during shuffle
+  const isProcessingRef = useRef(false)
+  // TODO: This should probably be cleaned up on unmount
+  const timeoutRef = useRef(null)
 
   const cardCount = DIFFICULTIES[difficulty].cardCount
 
-  // Fetch a brand-new deck any time difficulty changes (or on demand via loadNewDeck).
   const loadNewDeck = useCallback(async (count) => {
     setStatus(GAME_STATUS.LOADING)
     setError(null)
+    
     try {
       const pokemon = await fetchRandomPokemon(count)
       setCards(shuffleArray(pokemon))
@@ -67,6 +66,7 @@ export function useMemoryGame(initialDifficulty = 'medium') {
       setLastClickedId(null)
       setStatus(GAME_STATUS.PLAYING)
     } catch (err) {
+      console.error('Failed to load deck:', err) // Keep for debugging
       setError(err instanceof Error ? err.message : 'Something went wrong loading Pokémon.')
       setStatus(GAME_STATUS.ERROR)
     }
@@ -74,18 +74,19 @@ export function useMemoryGame(initialDifficulty = 'medium') {
 
   useEffect(() => {
     loadNewDeck(cardCount)
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally only re-fetch on difficulty change
   }, [difficulty])
 
-  // The core game logic: click a card to score, shuffle, or lose.
   const handleCardClick = useCallback(
     (pokemonId) => {
+      // FIXME: This doesn't work properly on mobile sometimes
+      if (isProcessingRef.current) return
+      
       if (status !== GAME_STATUS.PLAYING) return
 
       if (clickedIds.has(pokemonId)) {
-        // Repeat click — game over.
         setLastClickedId(pokemonId)
         setStatus(GAME_STATUS.LOST)
+        
         setBestScore((prevBest) => {
           const nextBest = Math.max(prevBest, score)
           if (nextBest !== prevBest) writeBestScore(nextBest)
@@ -94,6 +95,10 @@ export function useMemoryGame(initialDifficulty = 'medium') {
         return
       }
 
+      // Lock to prevent double clicks
+      isProcessingRef.current = true
+      clearTimeout(timeoutRef.current)
+      
       const nextClicked = new Set(clickedIds)
       nextClicked.add(pokemonId)
       const nextScore = score + 1
@@ -103,9 +108,14 @@ export function useMemoryGame(initialDifficulty = 'medium') {
       setLastClickedId(pokemonId)
       setCards((prevCards) => shuffleArray(prevCards))
 
+      // Unlock after shuffle animation
+      timeoutRef.current = setTimeout(() => {
+        isProcessingRef.current = false
+      }, 250)
+
       if (nextClicked.size === cards.length) {
-        // Every card clicked exactly once — win!
         setStatus(GAME_STATUS.WON)
+        
         setBestScore((prevBest) => {
           const nextBest = Math.max(prevBest, nextScore)
           if (nextBest !== prevBest) writeBestScore(nextBest)
@@ -116,16 +126,25 @@ export function useMemoryGame(initialDifficulty = 'medium') {
     [status, clickedIds, score, cards.length]
   )
 
-  // Reset with the SAME deck (used by "Play Again" so difficulty doesn't have to refetch).
+  // cleanup
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
   const restartRound = useCallback(() => {
     setCards((prevCards) => shuffleArray(prevCards))
     setClickedIds(new Set())
     setScore(0)
     setLastClickedId(null)
     setStatus(GAME_STATUS.PLAYING)
+    // Reset the lock just in case
+    isProcessingRef.current = false
   }, [])
 
-  // Fetch a brand-new deck of the same size (used by "New Deck").
   const newDeck = useCallback(() => {
     loadNewDeck(cardCount)
   }, [loadNewDeck, cardCount])
