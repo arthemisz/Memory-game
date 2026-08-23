@@ -1,6 +1,6 @@
 #  Memory Match — Pokémon Memory Card Game
 
-A memory card game built with React + Vite. Click a card to score a point — but click the **same card twice** and it's game over. Cards reshuffle after every click using the Fisher-Yates algorithm, so you're never clicking in a predictable order.
+A memory card game built with React + Vite. Design heavy production.The logic of the game is Click a card to score a point — but click the **same card twice** and it's game over. Cards reshuffle after every click using the Fisher-Yates algorithm, so you're never clicking in a predictable order.
 
 Built for **Nexus Front-End Boot Camp — Project 4** (State, Side Effects & Game Logic), inspired by [The Odin Project's Memory Card lesson](https://www.theodinproject.com/lessons/node-path-react-new-memory-card).
 
