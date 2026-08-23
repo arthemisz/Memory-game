@@ -89,6 +89,7 @@ a:hover {
 }
 .header__logo { 
  width: 200px;
+ image-rendering: pixelated;
 }
 /* Header & HUD (Heads Up Display) */
 .header {
