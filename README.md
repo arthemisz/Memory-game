@@ -63,7 +63,7 @@ App
 
 ---
 
-## 🃏 The Shuffle Trap (why `key={pokemon.id}`)
+## The Shuffle Trap (why `key={pokemon.id}`)
 
 In `GameBoard.jsx`, each `<Card>` is keyed by `pokemon.id`, **never** by array index:
 
@@ -77,7 +77,7 @@ After a shuffle, the *array order* changes but the *set of Pokémon* doesn't. If
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) 18+ and npm
@@ -140,6 +140,6 @@ git log --oneline
 
 ---
 
-## 🙏 Credits
+## Credits
 
 Pokémon data and artwork via [PokéAPI](https://pokeapi.co/). Not affiliated with Nintendo, Game Freak, or The Pokémon Company. Project brief adapted from [The Odin Project](https://www.theodinproject.com/lessons/node-path-react-new-memory-card).
