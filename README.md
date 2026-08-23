@@ -15,27 +15,6 @@ Built for **Nexus Front-End Boot Camp — Project 4** (State, Side Effects & Gam
 5. Click **every card exactly once** → **You Win**.
 6. Your **best score** is saved across sessions (localStorage).
 
----
-
-## ✅ Requirements Checklist
-
-| # | Requirement | Where it lives |
-|---|---|---|
-| 1 | Cards fetched from PokéAPI using `useEffect` | `hooks/useMemoryGame.js` (effect calls `loadNewDeck`) |
-| 2 | Loading spinner while fetching | `components/LoadingSpinner.jsx` |
-| 3 | Responsive card grid | `styles/index.css` → `.board` (CSS Grid, `auto-fill`) |
-| 4 | Cards shuffle on every click | `utils/shuffle.js` (Fisher-Yates), called in `handleCardClick` |
-| 5 | Score increments on each new card click | `hooks/useMemoryGame.js` → `handleCardClick` |
-| 6 | Game over when same card clicked twice | `hooks/useMemoryGame.js` → `handleCardClick` (checks `clickedIds`) |
-| 7 | Win state when all cards clicked once | `hooks/useMemoryGame.js` → `handleCardClick` (`nextClicked.size === cards.length`) |
-| 8 | Best score tracked across rounds/sessions | `hooks/useMemoryGame.js` → `readBestScore` / `writeBestScore` (localStorage) |
-| 9 | Difficulty selector (8 / 12 / 20 cards) | `components/DifficultySelector.jsx` + `DIFFICULTIES` config |
-| 10 | Game over and win modals | `components/GameOverModal.jsx`, `components/WinModal.jsx` |
-| 11 | Proper key prop (Pokémon `id`, not array index) | `components/GameBoard.jsx` — see "The Shuffle Trap" below |
-| 12 | Deployed to Vercel or Netlify | See [Deployment](#-deployment) below |
-| 13 | GitHub with meaningful commits | This repo ships with staged commits — see [Push to GitHub](#-push-to-github) |
-
----
 
 ## 📁 Project Structure
 
