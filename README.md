@@ -1,4 +1,4 @@
-# 🧠 Memory Match — Pokémon Memory Card Game
+#  Memory Match — Pokémon Memory Card Game
 
 A memory card game built with React + Vite. Click a card to score a point — but click the **same card twice** and it's game over. Cards reshuffle after every click using the Fisher-Yates algorithm, so you're never clicking in a predictable order.
 
@@ -6,7 +6,7 @@ Built for **Nexus Front-End Boot Camp — Project 4** (State, Side Effects & Gam
 
 ---
 
-## 🎮 How to Play
+## How to Play
 
 1. A grid of Pokémon cards loads from [PokéAPI](https://pokeapi.co/).
 2. Click any card to score **+1 point**.
@@ -14,28 +14,6 @@ Built for **Nexus Front-End Boot Camp — Project 4** (State, Side Effects & Gam
 4. Click a card you've **already clicked this round** → **Game Over**.
 5. Click **every card exactly once** → **You Win**.
 6. Your **best score** is saved across sessions (localStorage).
-
----
-
-## ✅ Requirements Checklist
-
-| # | Requirement | Where it lives |
-|---|---|---|
-| 1 | Cards fetched from PokéAPI using `useEffect` | `hooks/useMemoryGame.js` (effect calls `loadNewDeck`) |
-| 2 | Loading spinner while fetching | `components/LoadingSpinner.jsx` |
-| 3 | Responsive card grid | `styles/index.css` → `.board` (CSS Grid, `auto-fill`) |
-| 4 | Cards shuffle on every click | `utils/shuffle.js` (Fisher-Yates), called in `handleCardClick` |
-| 5 | Score increments on each new card click | `hooks/useMemoryGame.js` → `handleCardClick` |
-| 6 | Game over when same card clicked twice | `hooks/useMemoryGame.js` → `handleCardClick` (checks `clickedIds`) |
-| 7 | Win state when all cards clicked once | `hooks/useMemoryGame.js` → `handleCardClick` (`nextClicked.size === cards.length`) |
-| 8 | Best score tracked across rounds/sessions | `hooks/useMemoryGame.js` → `readBestScore` / `writeBestScore` (localStorage) |
-| 9 | Difficulty selector (8 / 12 / 20 cards) | `components/DifficultySelector.jsx` + `DIFFICULTIES` config |
-| 10 | Game over and win modals | `components/GameOverModal.jsx`, `components/WinModal.jsx` |
-| 11 | Proper key prop (Pokémon `id`, not array index) | `components/GameBoard.jsx` — see "The Shuffle Trap" below |
-| 12 | Deployed to Vercel or Netlify | See [Deployment](#-deployment) below |
-| 13 | GitHub with meaningful commits | This repo ships with staged commits — see [Push to GitHub](#-push-to-github) |
-
----
 
 ## 📁 Project Structure
 
@@ -184,7 +162,7 @@ git log --oneline
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **React 18** — UI and state
 - **Vite** — dev server & build tool
