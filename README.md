@@ -108,40 +108,7 @@ No API key or `.env` file is required — PokéAPI is free and public.
 
 ---
 
-## ☁️ Deployment
-
-### Option A: Vercel
-
-1. Push this project to a GitHub repo (see below).
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repo.
-3. Vercel auto-detects Vite. Confirm:
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-4. Click **Deploy**.
-
-Or via CLI:
-```bash
-npm install -g vercel
-vercel --prod
-```
-
-### Option B: Netlify
-
-1. Push this project to a GitHub repo (see below).
-2. Go to [app.netlify.com/start](https://app.netlify.com/start) and pick the repo.
-3. Set:
-   - **Build Command:** `npm run build`
-   - **Publish Directory:** `dist`
-4. Click **Deploy site**.
-
-Or via CLI:
-```bash
-npm install -g netlify-cli
-netlify deploy --prod --dir=dist
-```
-
----
-
+#
 ## 📦 Push to GitHub
 
 This project already includes a local git repo with staged, meaningful commits (scaffold → utilities → game logic → components → styling → docs). To publish it:
